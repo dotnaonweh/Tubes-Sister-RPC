@@ -11,7 +11,7 @@ alamatTerdugaCovid = input("Masukkan Alamat Terduga: ")
 gejalaTerdugaCovid = input("Masukkan Gejala yang Dialami ")
 
 # panggil fungsi RPC di server
-result = proxy.check_laporan(nikPelapor, namaPelapor, namaTerdugaCovid, alamatTerdugaCovid, gejalaTerdugaCovid)
+result = proxy.validate_report(nikPelapor, namaPelapor, namaTerdugaCovid, alamatTerdugaCovid, gejalaTerdugaCovid)
 
 if 'error' in result:
     print(f"\n{result['error']}")
