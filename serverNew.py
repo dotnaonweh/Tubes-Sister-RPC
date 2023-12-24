@@ -9,14 +9,21 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
 with xmlrpc.server.SimpleXMLRPCServer(('localhost', 1337),
                                       requestHandler=RequestHandler) as server:
 
-    valid_nik_set = {"123", "321"}
+    def check(nikPelapor):
+        with open('nik.txt') as f:
+            datafile = f.readlines()
+        found = False 
+        for line in datafile:
+            if nikPelapor in line:
+                return True
+        return False 
 
     # Fungsi untuk memvalidasi laporan
     def validate_report(nikPelapor, namaPelapor, namaTerdugaCovid, alamatTerdugaCovid, gejalaTerdugaCovid):
         if not (nikPelapor and namaPelapor and namaTerdugaCovid and alamatTerdugaCovid and gejalaTerdugaCovid):
             return {'error': 'Data tidak lengkap'}
 
-        if nikPelapor in valid_nik_set:
+        if check(nikPelapor):
             response = {
                 'waktu': (datetime.now() + timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S'),
                 'nama_petugas': 'Tim Penanganan COVID-19',
@@ -29,14 +36,6 @@ with xmlrpc.server.SimpleXMLRPCServer(('localhost', 1337),
                     'Gejala_dirasakan': gejalaTerdugaCovid
                 }
             }
-
-            # print("Laporan COVID-19 diterima. Respon:")
-            # print("Waktu: ", response['waktu'])
-            # print("Petugas: ", response['nama_petugas'])
-            # print("Jumlah Orang: ", response['jumlah_orang'])
-            # print("Detail:")
-            # for key, value in response['detail'].items():
-            #     print(f"{key}: {value}")
 
             return response
         else:
